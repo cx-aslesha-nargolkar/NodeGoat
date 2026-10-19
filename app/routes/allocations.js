@@ -2,6 +2,7 @@ const AllocationsDAO = require("../data/allocations-dao").AllocationsDAO;
 const {
     environmentalScripts
 } = require("../../config/config");
+const ESAPI = require("node-esapi");
 
 function AllocationsHandler(db) {
     "use strict";
@@ -13,9 +14,8 @@ function AllocationsHandler(db) {
         // Fix for A4 Insecure DOR -  take user id from session instead of from URL param
         const { userId } = req.session;
         */
-        const {
-            userId
-        } = req.params;
+        // Fix for A3 - XSS: HTML-encode userId from URL params before rendering
+        const userId = ESAPI.encoder().encodeForHTML(req.params.userId);
         const {
             threshold
         } = req.query;
